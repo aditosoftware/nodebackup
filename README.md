@@ -17,10 +17,15 @@ We have two differen type of server:
  b. Exec started a backupjob, defined in config.yml 
  c. The backupdate will be transferd through exec server
 
+ ![schema1](schema/starter-exec-client-server.png)
+
+
 2. Starter, exex/client, server exec and client are the same server. 
     (show image starter-exec-server.png in schema)
  a. Starter started BackupNode on exec.
  b. exec startet backupjob on the same server
+
+ ![schema2](starter-exec-server.png)
 
 ## Requiments
 ### Node.js
