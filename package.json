@@ -1,0 +1,29 @@
+{
+  "name": "backupexecv2",
+  "version": "1.0.0",
+  "description": "backup script",
+  "main": "BackupExecV2.js",
+  "dependencies": {
+    "commander": "~2.9.0",
+    "scp2": "~0.2.2",
+    "ssh2": "~0.4.13",
+    "yamljs": "~0.2.5",
+    "winston": "~2.1.1",
+    "async": "~1.5.2",
+    "console.table": "~0.4.0",
+    "glob": "~7.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {"start": "node BackupExecV2.js -h",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitintern.aditosoftware.local:ops/node.js.git"
+  },
+  "keywords": [
+    "backup"
+  ],
+  "author": "a.walker",
+  "license": "MIT"
+}

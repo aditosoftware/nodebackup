@@ -1,0 +1,63 @@
+starter:
+    sshkey: id_rsa
+    log:
+      path: log
+    pidpath: pids
+backupserver:
+  backup2:
+    passphrase: PASSPHRASE-FOR-DUPLICITY
+    HOST: backup2.example.com
+    USER: admin2
+    PORT: '22'
+    maxjobs: 5
+    prerun: '["echo prerun1", "echo prerun2", "echo prerun3"]'
+    prerun: '["echo prerun1"]'
+    #postrun: '["echo postrun1","echo postrun2","echo postrun3"]'
+    #postrun: '["sudo rsync -ae folder1 folder2"]'
+    backuppath: /backup
+    duplicityarchiv: /backup/duplicityarchiv
+    backuppartsize: 2048
+    tmpdir: /backup/backuptemp
+    backupfor: '["server1", "server2", "dockerhost1"]'
+clientserver:
+  backup2:
+    HOST: backup2.example.com
+    USER: admin2
+    PORT: '22'
+    sftpServer:
+      sudo: true
+      path: /usr/lib/sftp-server
+  server1:
+    HOST: "freepbx.example.com"
+    USER: root
+    PORT: '22'
+    nextfullbackup: 1M
+    noffullbackup: 2
+    backup: /var/spool/asterisk/backup/taeglich
+    prerun: '["mv /var/spool/asterisk/backup/taeglich/*.tgz /var/spool/asterisk/backup/taeglich/backup.tgz"]'
+    postrun: '["rm -Rf /var/spool/asterisk/backup/taeglich/backup.tgz"]'
+    confprefixes: '["asynchronous-upload"]'
+  server2:
+    HOST: "windows.example.com"
+    SMB:
+      SET: "true"
+      PATH: "d$"
+      PASS: "w!elepop!n06"
+      DOMAIN: "example.com"
+    USER: "backupservice"
+    PORT: 22
+    backup: /cygdrive/d
+    include: '["usershare", "publicshare", "Geschäftsleitung"]'
+    exclude: '["publicshare/Softwarepool", "**"]'
+    confprefixes: '["asynchronous-upload", "allow-source-mismatch"]'
+  dockerhost1:
+    HOST: dockerHostN010912m.example.local
+    USER: docker
+    PORT: 22
+    nextfullbackup: 1M
+    noffullbackup: 2
+    docker: 'true'
+    confprefixes: '["asynchronous-upload"]'
+    sftpServer:
+      sudo: true
+      path: /usr/lib/sftp-server
