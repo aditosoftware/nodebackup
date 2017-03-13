@@ -267,8 +267,7 @@ if (program.backup) {
                                       logger.debug("##########################################");
                                       process.exit(0);
                                     }
-
-                                    console.log("###########################\n", JSON.stringify(toRunArr), "###################################\n");
+                                    
                                     //push backup prerun to run Array
                                     if (backupPreRun.arr !== undefined && backupPreRun.arr.length > 0) {
                                       toRunArr.unshift(backupPreRun);
