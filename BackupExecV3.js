@@ -8,7 +8,7 @@ var winston = require('winston');
 var backup = require('./lib/BackupFunc2');
 
 program
-  .version('1.2.0')
+  .version('3.0.10')
   .option('-b, --backup', 'start backup')
   .option('-e, --exec [exec]', 'server, which start backup job')
   .option('-t, --target [target]', 'single server for backup')
@@ -27,13 +27,13 @@ program.on('--help', function () {
   console.log('   Read README.md for more info');
   console.log(' ');
   console.log('  Backup:');
-  console.log('    Backup: sudo ./BackupExecV2 -b -e backup2 -s backup2');
-  console.log('    Single backup: sudo ./BackupExecV2 -b -e backup2 -s backup2 -t freepbx');
+  console.log('    Backup: sudo ./BackupExecV3 -b -e backup2 -s backup2');
+  console.log('    Single backup: sudo ./BackupExecV3 -b -e backup2 -s backup2 -t freepbx');
   console.log(' ');
   console.log('  Recovery: ');
-  console.log('    Backup to original path: sudo ./BackupExecV2.js -r -t backup-new-test -s backup2 -p freepbx -o');
-  console.log('    Backup to custom path: sudo ./BackupExecV2.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder');
-  console.log('    Backup to custom path: sudo ./BackupExecV2.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder -o -m (2D|1W|10s|50m)');
+  console.log('    Backup to original path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -p freepbx -o');
+  console.log('    Backup to custom path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder');
+  console.log('    Backup to custom path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder -o -m (2D|1W|10s|50m)');
   console.log(' ');
   //console.log('    $ server-exec.js -e backup2 -s backup2 -d -t single-server-to-backup');
 });
