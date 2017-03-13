@@ -1,6 +1,10 @@
 backupcontroller:
   image: nodebackup
   hostname: backupcontroller
+  environment:
+   - SSMTP_SENDER_ADDRESS=no-reply@example.com
+   - SSMTP_MAIL_SERVER=mail.example.com
+   - SSMTP_HOST=nodebackup.example.com
   volumes:
     - /nodejs/nodebackup/config.yml:/nodebackup/config.yml
     - /nodejs/nodebackup/id_rsa:/nodebackup/id_rsa

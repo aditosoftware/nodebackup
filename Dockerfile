@@ -3,7 +3,7 @@ FROM mhart/alpine-node-auto:7.7
 COPY run.sh /run.sh
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
+    apk add --no-cache bash git openssh ssmtp
 
 RUN touch /crontab.tmp \
     && echo '2 0 * * * echo "Test Test"' >> /crontab.tmp \

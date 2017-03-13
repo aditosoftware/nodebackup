@@ -188,7 +188,7 @@ if (program.backup) {
   var testConfig = checkConfig([backupServerConfig, execServerConfig])
     .then(configOK => {
       if (configOK !== 0) {
-        logger.error(configOK + " of backup or exec server is not defined in config.xml. Exit");
+        logger.error(configOK + " of backup or exec server is not defined in config.yml. Exit");
         process.exit(1);
       } else {
         var backupJob = new backup(logger, program.server, program.exec, serverconfig);
