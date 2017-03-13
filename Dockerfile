@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM mhart/alpine-node-auto:7.7
 
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git openssh
@@ -6,7 +6,10 @@ RUN apk update && apk upgrade && \
 RUN touch /crontab.tmp \
     && echo '2 0 * * * echo "Test Test"' >> /crontab.tmp \
     && crontab /crontab.tmp \
-    && rm -rf /crontab.tmp
+    && rm -rf /crontab.tmp \
+    && git clone https://github.com/aditosoftware/nodebackup.git \
+    && cd /nodebackup && npm install
 
-CMD ["/usr/sbin/crond", "-f", "-d", "0"]
+COPY run.sh /run.sh
 
+CMD ["/run.sh"]

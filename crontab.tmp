@@ -1,0 +1,9 @@
+MAILTO=administrator@example.com
+NODE_PATH=/usr/lib/nodejs:/usr/lib/node_modules:/usr/share/javascript
+
+
+# m  h  dom mon dow   command
+ 20  21  *   *   *    /nodebackup/BackupExecV2.js -e backup2 -s backup2 -f
+  0  22  *   *   *    /nodebackup/BackupExecV2.js -e hetzner -s hetzner
+ 10  22  *   *   *    /nodebackup/BackupExecV2.js -e hetzner2 -s hetzner2 -f
+ 10  22  *   *   *    /nodebackup/BackupExecV2.js -e hetzner3 -s hetzner3

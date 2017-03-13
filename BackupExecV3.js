@@ -132,6 +132,11 @@ if (program.debug) {
   }
 }
 
+if(program.restore == undefined && program.verify == undefined && program.backup == undefined){
+  console.log("Please select backup (-b), restore(-r), verify(-i) or help (-h)");
+  process.exit(0);
+}
+
 if (program.restore) {
   var restoreFunc = new moduleRestoreFunc(logger, program, serverconfig, sshkeypath, program.target, pidsdir);
   restoreFunc._restore();

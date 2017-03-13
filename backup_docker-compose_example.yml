@@ -1,0 +1,24 @@
+httpd:
+  image: httpd
+  hostname: backup-new-test
+  links:
+    - redis:redisio
+  volumes:
+    - /a/data/backup-new-test/httpdocs:/a/http
+    - /a/data/backup-new-test/httpconf:/a/conf
+  restart: unless-stopped
+  labels:
+    prerun: '["echoc prerun1", "echo prerun2"]'
+    postrun: '["echo postrun1","echo postrun2"]'
+    nextfullbackup: "1M"
+    noffullbackup: "2"
+    backup: "/a/data/backup-new-test"
+    strategy: "off"
+    confprefixes: '["allow-source-mismatch"]'
+    name: "backup-new-test"
+    processes: '["httpd"]'
+    failovercustom: "echo 'failover ####################'"
+
+redis:
+  image: sameersbn/redis:latest
+  restart: unless-stopped

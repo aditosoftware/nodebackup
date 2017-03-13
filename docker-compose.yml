@@ -1,0 +1,8 @@
+backupcontroller:
+  image: nodebackup
+  hostname: backupcontroller
+  volumes:
+    - /nodejs/nodebackup/config.yml:/nodebackup/config.yml
+    - /nodejs/nodebackup/id_rsa:/nodebackup/id_rsa
+    - /nodejs/nodebackup/crontab.tmp:/crontab.tmp
+  restart: unless-stopped

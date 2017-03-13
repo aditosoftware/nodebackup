@@ -5,6 +5,10 @@ The possible backups are only data.
 
 We use for backup the [duplicity](http://duplicity.nongnu.org)
 
+## Docker container
+
+We've build a docker container [here](https://github.com/aditosoftware/nodebackup)
+
 ## Description
 We have two differen type of server:
 1. Server - normalserver
@@ -12,20 +16,20 @@ We have two differen type of server:
 
 ### Schema
 1. Starter,exec,server,client are different server
-    (show image starter-exec-client-server.png in schema)
- a. Starter started BackupNode on exec.
- b. Exec started a backupjob, defined in config.yml 
- c. The backupdate will be transferd through exec server
+
+a. Starter started BackupNode on exec.
+b. Exec started a backupjob, defined in config.yml 
+c. The backupdate will be transferd through exec server
 
  ![schema1](schema/starter-exec-client-server.png)
 
 
-2. Starter, exex/client, server exec and client are the same server. 
-    (show image starter-exec-server.png in schema)
- a. Starter started BackupNode on exec.
- b. exec startet backupjob on the same server
+2. Starter, exex/client, server exec and client are the same server.
+ 
+a. Starter started BackupNode on exec.
+b. exec startet backupjob on the same server
 
- ![schema2](starter-exec-server.png)
+ ![schema2](schema/starter-exec-server.png)
 
 ## Requiments
 ### Node.js
@@ -43,6 +47,10 @@ You need to install duplicity (last 0.6) on exec
 ### SSHFS
 
 Install this on exec server
+
+### CIFS
+
+Install cifs, if you'll backup a samba share (for example windows share)
 
 ### Docker
 
@@ -93,7 +101,6 @@ Backup Server (Server, which save the backup)
         HOST: backup2.domain.local
         USER: admin2
         PORT: '22'
-        maxjobs: 5
         backuppath: /a/target
         backupfor: '["freepbx"]'
         backuppartsize: 200
@@ -105,7 +112,6 @@ backup2 - name of the server. You can define more the on backup server
 HOST - DNS name of server. IP address is possible
 USER - user for authentification
 PORT - ssh port
-maxjobs (optional) - number of backupjob at the same time running. If not defined default is 3
 backuppartsize (optional) - size of backup archiv parts. If not defined, set to default (100mb)
 backuppath - path where the nodebackup will be save backups. Example: /a/target/clientname/path-from-clientconfig-backup
 backupfor - server from config/clientserver

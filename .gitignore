@@ -1,9 +1,8 @@
-aliases
-dir
-nbproject
 node_modules
 id_rsa
 test.js
 config.yml
 .vscode
 pids
+log
+log/
