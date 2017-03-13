@@ -1,6 +1,6 @@
-# BackupNode
+# Nodebackup
 
-BackupNode is a program written in Node.js to make backup of server and docker hosts.
+Nodebackup is a program written in Node.js to make backup of server and docker hosts.
 The possible backups are only data.
 
 We use for backup the [duplicity](http://duplicity.nongnu.org)
@@ -17,7 +17,7 @@ We have two differen type of server:
 ### Schema
 1. Starter,exec,server,client are different server
 
-a. Starter started BackupNode on exec.
+a. Starter started Nodebackup on exec.
 b. Exec started a backupjob, defined in config.yml 
 c. The backupdate will be transferd through exec server
 
@@ -26,7 +26,7 @@ c. The backupdate will be transferd through exec server
 
 2. Starter, exex/client, server exec and client are the same server.
  
-a. Starter started BackupNode on exec.
+a. Starter started Nodebackup on exec.
 b. exec startet backupjob on the same server
 
  ![schema2](schema/starter-exec-server.png)
