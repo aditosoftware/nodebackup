@@ -1,8 +1,8 @@
 {
   "name": "backupexecv2",
-  "version": "1.0.0",
+  "version": "3.0.10",
   "description": "backup script",
-  "main": "BackupExecV2.js",
+  "main": "BackupExecV3.js",
   "dependencies": {
     "commander": "~2.9.0",
     "scp2": "~0.2.2",
@@ -14,16 +14,16 @@
     "glob": "~7.0.3"
   },
   "devDependencies": {},
-  "scripts": {"start": "node BackupExecV2.js -h",
+  "scripts": {"start": "node BackupExecV3.js -h",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitintern.aditosoftware.local:ops/node.js.git"
+    "url": "git@github.com:aditosoftware/nodebackup.git"
   },
   "keywords": [
     "backup"
   ],
-  "author": "a.walker",
+  "author": "de1m",
   "license": "MIT"
 }
