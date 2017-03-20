@@ -7,7 +7,7 @@ We use for backup the [duplicity](http://duplicity.nongnu.org)
 
 ## Docker container
 
-We've build a docker container [here](https://github.com/aditosoftware/nodebackup)
+We've build a docker container [here](https://hub.docker.com/r/adito/nodebackup/)
 
 ## Description
 We have two differen type of server:
