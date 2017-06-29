@@ -98,6 +98,7 @@ Backup Server (Server, which save the backup)
 
     backupserver:
       backup2:
+        passphrase: LkalmflkAJMAlkjfslk
         HOST: backup2.domain.local
         USER: admin2
         PORT: '22'
@@ -135,6 +136,7 @@ Client server
         postrun: '["echo postrun1", "echo postrun2"]'
         confprefixes: '["asynchronous-upload"]'
         compression: "true/false"
+        passphrase: "lasdkfasdf0)!=LfkajsdfL"
         sftpServer:
           sudo: true
           path: /usr/lib/sftp-server  
@@ -150,6 +152,7 @@ postrun - a command to run after backup.
 confprefixes - add paramater for rdiff-backup, more information in man rdiff-backup. You don't need to write "--"
 sftpServer - if you will use sudo on client, you need to define where is sfpt-server (use command "whereis sftp-server")
 compression - default true
+passphrase - duplicity passphrase, can now for each server or container defined
 
 
 ### Client Server (Dockerhost)
@@ -185,6 +188,8 @@ You can use both option  - "dockercompose" and "backup" on the same server
         compression: "false"
         startaftererror: "false"
         failovercustom: "echo test"
+        passphrase: "lasdkfasdf0)!=LfkajsdfL"
+        
         
 ##### Samba Share
     
@@ -201,6 +206,7 @@ DOMAIn - AD Domain
 strategy: off - container will be shutdown befor backup (docker-compose -f /path/docker-compose.yml stop) and start again after backup
 strategy: on - backup will be run without shutdown the container
 startaftererror - start container after error (prerun,postrun,backup). Default true
+passphrase - duplicity passphrase, can now for each server or container defined
 failovercustom: if container commands prerun,backup,postrun run in a error, then you can define a failovercustom command, the normal command is "sudo docker start CONTAINERNAME"
 other option are equivalent to clientserver configuration
 
