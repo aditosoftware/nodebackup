@@ -4,14 +4,14 @@
   "description": "backup script",
   "main": "BackupExecV3.js",
   "dependencies": {
+    "async-limiter": "^1.0.0",
+    "cli-table": "^0.3.1",
     "commander": "~2.9.0",
+    "console.table": "^0.9.1",
     "scp2": "~0.2.2",
     "ssh2": "~0.4.13",
-    "yamljs": "~0.2.5",
     "winston": "~2.1.1",
-    "async": "~1.5.2",
-    "console.table": "~0.4.0",
-    "glob": "~7.0.3"
+    "yamljs": "~0.2.5"
   },
   "devDependencies": {},
   "scripts": {
