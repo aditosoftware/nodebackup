@@ -3,6 +3,6 @@ id_rsa
 test.js
 config.yml
 .vscode
-pids
+pids/
 log
 log/

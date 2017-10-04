@@ -70,11 +70,30 @@ if (path.isAbsolute(starter.log.path)) {
 } else {
   //path is relativ, create absolute path
   var logdir = path.resolve(path.dirname(process.argv[1]) + "/" + starter.log.path);
+  serverconfig.log.path = logdir;
 }
 
 //check if log dir exist, create if not found
 if (!fs.existsSync(logdir)) {
   fs.mkdirSync(logdir);
+}
+
+//check if pid dir exist
+if (starter.pids !== undefined && starter.pids !== null) {
+  if (path.isAbsolute(starter.pids)) {
+    var pidsdir = starter.pids;
+  } else {
+    var pidsdir = path.resolve(path.dirname(process.argv[1]) + '/' + starter.pids);
+  }
+  serverconfig.starter.pids = pidsdir;
+} else {
+  console.log("Config for starter.pids not found. Exit");
+  process.exit(1);
+}
+
+//check if pids folder exist
+if (!fs.existsSync(pidsdir)) {
+  fs.mkdirSync(pidsdir);
 }
 
 //define logger
@@ -175,7 +194,6 @@ if (program.backup) {
 }
 
 var getFormatedOutput = function (output) {
-  //parse output #####################
   var formatedOutputObj = [];
 
   output.map((runOutput) => {
