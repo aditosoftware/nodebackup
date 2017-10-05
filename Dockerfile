@@ -1,4 +1,4 @@
-FROM 8.6-alpine
+FROM node:8.6-alpine
 
 COPY run.sh /run.sh
 
