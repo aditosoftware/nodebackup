@@ -1,5 +1,5 @@
 backupcontroller:
-  image: nodebackup
+  image: adito/nodebackup
   hostname: backupcontroller
   environment:
    - SSMTP_SENDER_ADDRESS=no-reply@example.com

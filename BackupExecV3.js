@@ -6,6 +6,7 @@ var path = require('path');
 var program = require('commander');
 var helpf = require('./lib/helpFunc');
 var backup = require('./lib/Backup');
+var RestoreFunc = require('./lib/RestoreFunc');
 var logger = require('./lib/Logger');
 
 program
@@ -17,11 +18,9 @@ program
   .option('-d, --debug', 'debug to console')
   .option('-f, --debugfile', 'debug to file')
   .option('-r, --restore', 'starte restore')
-  .option('-c, --pathcustom [pathcustom]', 'path to restore data (custom path)')
-  .option('-o, --overwrite', 'overwrite existing folder by recovery')
-  .option('-p, --pathdefault [pathdefault]', 'default path from config.yml')
+  .option('-p, --path [path]', 'Paht server:/path')
   .option('-m, --time [time]', 'backup from [time]')
-  .option('-i, --verify', 'verify all backups on a backup server');
+  .option('-o, --phrase [phrase]', 'duplicity passphrase');
 
 program.on('--help', function () {
   console.log('  Info:');
@@ -32,11 +31,8 @@ program.on('--help', function () {
   console.log('    Single backup: sudo ./BackupExecV3 -b -e backup2 -s backup2 -t freepbx');
   console.log(' ');
   console.log('  Recovery: ');
-  console.log('    Backup to original path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -p freepbx -o');
-  console.log('    Backup to custom path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder');
-  console.log('    Backup to custom path: sudo ./BackupExecV3.js -r -t backup-new-test -s backup2 -c freepbx:/tmp/newFolder -o -m (2D|1W|10s|50m)');
+  console.log('    Backup to path: sudo node BackupExecV3.js -r -t backup-new-test -e backup2 -s backup2 -p freepbx:/tmp/folder -o PASSPHRASE -m (2D|1W|10s|50m)');
   console.log(' ');
-  //console.log('    $ server-exec.js -e backup2 -s backup2 -d -t single-server-to-backup');
 });
 program.parse(process.argv);
 
@@ -75,7 +71,17 @@ if (path.isAbsolute(starter.log.path)) {
 
 //check if log dir exist, create if not found
 if (!fs.existsSync(logdir)) {
-  fs.mkdirSync(logdir);
+  // fs.mkdirSync(logdir);
+  const sep = path.sep;
+  const initDir = path.isAbsolute(logdir) ? sep : '';
+  logdir.split(sep).reduce((parentDir, childDir) => {
+    const curDir = path.resolve(parentDir, childDir);
+    if (!fs.existsSync(curDir)) {
+      fs.mkdirSync(curDir);
+    }
+
+    return curDir;
+  }, initDir);
 }
 
 //check if pid dir exist
@@ -141,24 +147,34 @@ if (program.restore == undefined && program.verify == undefined && program.backu
 
 //start restore
 if (program.restore) {
-  var restoreFunc = new moduleRestoreFunc(logger, program, serverconfig, sshkeypath, program.target, pidsdir);
-  restoreFunc._restore();
+  // var restoreFunc = new moduleRestoreFunc(logger, program, serverconfig, sshkeypath, program.target, pidsdir);
+  var restore = new RestoreFunc(program.server, program.exec, serverconfig, program.path, program.time, program.phrase);
+  restore.startRestore(function (err, result) {
+    if (err) {
+      logger.error(err);
+    } else {
+      logger.debug("Recovery is competed.Exit");
+      console.log("Recovery is competed.Exit");
+      process.exit(0);
+    }
+  })
+
 }
 
 //start verify
-if (program.verify) {
-  var verBackup = new moduleVerify(serverconfig, program.server, program.exec, logger);
+// if (program.verify) {
+//   var verBackup = new moduleVerify(serverconfig, program.server, program.exec, logger);
 
-  verBackup.verifyAllBackups(function (err, bArr) {
-    if (err) {
-      logger.error(err);
-      process.exit(1);
-    } else {
-      verBackup.writeOutput(bArr);
-      process.exit(0);
-    }
-  });
-}
+//   verBackup.verifyAllBackups(function (err, bArr) {
+//     if (err) {
+//       logger.error(err);
+//       process.exit(1);
+//     } else {
+//       verBackup.writeOutput(bArr);
+//       process.exit(0);
+//     }
+//   });
+// }
 
 //start backup
 if (program.backup) {
