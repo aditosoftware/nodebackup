@@ -1,4 +1,4 @@
-FROM mhart/alpine-node-auto:7.7
+FROM node:8.6-alpine
 
 COPY run.sh /run.sh
 

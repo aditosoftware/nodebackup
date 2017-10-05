@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: echoserver
+  annotations:
+    nextfullbackup: "1W"
+    noffullbackup: "2"
+    backup: "/cephfs/derby"
+    strategy: "off"
+    passphrase: "containerPASS"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: echoserver
+    spec:
+      containers:
+      - image: gcr.io/google_containers/echoserver:1.0
+        imagePullPolicy: Always
+        name: echoserver
+        ports:
+        - containerPort: 8080

@@ -9,16 +9,15 @@ backupserver:
     HOST: backup2.example.com
     USER: admin2
     PORT: '22'
-    maxjobs: 5
     prerun: '["echo prerun1", "echo prerun2", "echo prerun3"]'
     prerun: '["echo prerun1"]'
-    #postrun: '["echo postrun1","echo postrun2","echo postrun3"]'
-    #postrun: '["sudo rsync -ae folder1 folder2"]'
+    postrun: '["echo postrun1","echo postrun2","echo postrun3"]'
+    postrun: '["sudo rsync -ae folder1 folder2"]'
     backuppath: /backup
     duplicityarchiv: /backup/duplicityarchiv
     backuppartsize: 2048
     tmpdir: /backup/backuptemp
-    backupfor: '["server1", "server2", "dockerhost1"]'
+    backupfor: '["server1", "server2", "dockerhost1", "k8s-node"]'
 clientserver:
   backup2:
     HOST: backup2.example.com
@@ -47,7 +46,7 @@ clientserver:
     USER: "backupservice"
     PORT: 22
     backup: /cygdrive/d
-    include: '["usershare", "publicshare", "Geschäftsleitung"]'
+    include: '["usershare", "publicshare"]'
     exclude: '["publicshare/Softwarepool", "**"]'
     confprefixes: '["asynchronous-upload", "allow-source-mismatch"]'
   dockerhost1:
@@ -61,3 +60,9 @@ clientserver:
     sftpServer:
       sudo: true
       path: /usr/lib/sftp-server
+  k8s-node:
+    HOST: k8s-node1.example.com
+    USER: root
+    PORT: 122
+    kube: true
+    namespaces: '["fortesting"]'
