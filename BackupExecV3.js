@@ -228,7 +228,7 @@ var getFormatedOutput = function (output) {
             }
           }
 
-          //parse --print-statistic output
+          //parse --print-statistic output of duplicity
           var ln = startArrInt;
           var starttime = stat[ln + 1].substring(25, 49); //StartTime 1454660238.00 (|Fri Feb  5 09:17:18 2016|)
           var elapsedTime = stat[ln + 3].substring(12, 100); //ElapsedTime |16.94 (16.94 seconds)|
