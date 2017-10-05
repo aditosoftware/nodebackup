@@ -31,7 +31,7 @@ program.on('--help', function () {
   console.log('    Single backup: sudo ./BackupExecV3 -b -e backup2 -s backup2 -t freepbx');
   console.log(' ');
   console.log('  Recovery: ');
-  console.log('    Backup to path: sudo node BackupExecV3.js -r -t backup-new-test -e backup2 -s backup2 -p freepbx:/tmp/folder -o PASSPHRASE -m (2D|1W|10s|50m)');
+  console.log('    Backup to path: sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o PASSPHRASE -m (2D|1W|10s|50m)');
   console.log(' ');
 });
 program.parse(process.argv);
