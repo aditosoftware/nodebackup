@@ -1,15 +1,16 @@
 FROM node:8.6-alpine
 
-COPY run.sh /run.sh
+ADD run.sh /
+ADD BackupExecV3.js /nodebackup/
+ADD lib /nodebackup/lib/
+ADD package.json /nodebackup/package.json
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh ssmtp
-
-RUN touch /crontab.tmp \
+    apk add --no-cache bash openssh ssmtp \
+    && touch /crontab.tmp \
     && echo '2 0 * * * echo "Test Test"' >> /crontab.tmp \
     && crontab /crontab.tmp \
     && rm -rf /crontab.tmp \
-    && git clone https://github.com/aditosoftware/nodebackup.git \
     && cd /nodebackup && npm install \
     && chmod +x /run.sh
 
