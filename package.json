@@ -1,6 +1,6 @@
 {
   "name": "backupexecv2",
-  "version": "3.2",
+  "version": "3.2.10",
   "description": "Tool for backup of serverdate, containerdata, kubernetes deploys data",
   "main": "BackupExecV3.js",
   "dependencies": {
