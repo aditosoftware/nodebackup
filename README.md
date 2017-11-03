@@ -130,7 +130,7 @@ Backup Server (Server, which save the backup)
 **prerun** - a command to run befor start backup. You can run a script, that is saved on target server \
 **postrun** - a command to run after backup. \
 **tmpdir** - folder for temporary files of duplicity (only a backuppart) \
-**provider** - backup tool borg or duplicity
+**provider** - backup tool borg or duplicity \
 **borgcache** (optional, **borg**) - path of borg cache folder. \
 **borgcompression** (optional, **borg**) - possible settings - none(default), lz4 (super fast, low compression), zlib (medium speed and compression) or lzma (low speed, high compression). 
 
