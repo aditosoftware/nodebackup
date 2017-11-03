@@ -16,11 +16,11 @@ program
   .option('-t, --target [target]', 'single server for backup')
   .option('-s, --server [server]', 'backup server')
   .option('-d, --debug', 'debug to console')
-  .option('-f, --debugfile', 'debug to file')
-  .option('-r, --restore', 'starte restore')
-  .option('-p, --path [path]', 'Paht server:/path')
-  .option('-m, --time [time]', 'backup from [time]')
-  .option('-o, --phrase [phrase]', 'duplicity passphrase');
+  .option('-f, --debugfile', 'debug to file');
+  // .option('-r, --restore', 'starte restore')
+  // .option('-p, --path [path]', 'Paht server:/path')
+  // .option('-m, --time [time]', 'backup from [time]')
+  // .option('-o, --phrase [phrase]', 'duplicity passphrase');
 
 program.on('--help', function () {
   console.log('  Info:');
@@ -30,9 +30,9 @@ program.on('--help', function () {
   console.log('    Backup: sudo ./BackupExecV3 -b -e backup2 -s backup2');
   console.log('    Single backup: sudo ./BackupExecV3 -b -e backup2 -s backup2 -t freepbx');
   console.log(' ');
-  console.log('  Recovery: ');
-  console.log('    Backup to path: sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o PASSPHRASE -m (2D|1W|10s|50m)');
-  console.log(' ');
+  // console.log('  Recovery: ');
+  // console.log('    Backup to path: sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o PASSPHRASE -m (2D|1W|10s|50m)');
+  // console.log(' ');
 });
 program.parse(process.argv);
 
@@ -66,7 +66,7 @@ if (path.isAbsolute(starter.log.path)) {
 } else {
   //path is relativ, create absolute path
   var logdir = path.resolve(path.dirname(process.argv[1]) + "/" + starter.log.path);
-  serverconfig.log.path = logdir;
+  serverconfig.starter.log.path = logdir;
 }
 
 //check if log dir exist, create if not found
@@ -147,7 +147,6 @@ if (program.restore == undefined && program.verify == undefined && program.backu
 
 //start restore
 if (program.restore) {
-  // var restoreFunc = new moduleRestoreFunc(logger, program, serverconfig, sshkeypath, program.target, pidsdir);
   var restore = new RestoreFunc(program.server, program.exec, serverconfig, program.path, program.time, program.phrase);
   restore.startRestore(function (err, result) {
     if (err) {
@@ -160,21 +159,6 @@ if (program.restore) {
   })
 
 }
-
-//start verify
-// if (program.verify) {
-//   var verBackup = new moduleVerify(serverconfig, program.server, program.exec, logger);
-
-//   verBackup.verifyAllBackups(function (err, bArr) {
-//     if (err) {
-//       logger.error(err);
-//       process.exit(1);
-//     } else {
-//       verBackup.writeOutput(bArr);
-//       process.exit(0);
-//     }
-//   });
-// }
 
 //start backup
 if (program.backup) {
@@ -251,6 +235,7 @@ var getFormatedOutput = function (output) {
           var incFiles = stat[ln + 13].substring(13, 100); //IncrementFiles |3|
           var totalSize = stat[ln + 14].substring(27, 100);//TotalDestinationSizeChange |88975749 (84.9 MB)|
           var errors = stat[ln + 15].substring(7, 100); //Errors |0|
+          var type = 'duplicity';
 
           logger.info(name + " | " + starttime + " | " + elapsedTime + " | " + incFiles + "  | " + totalSize + " | " + errors); //write output to log file
           //      like: 
@@ -263,18 +248,35 @@ var getFormatedOutput = function (output) {
             "ElapsedTime": elapsedTime,
             "Increment Files Size": incFiles,
             "Total Size changed": totalSize,
-            "Errors": errors
+            "Errors": errors,
+            'Backup Type': type
           });
 
         }
       }
+
+      if (type == 'borg'){
+        var borgJson = JSON.parse(message);
+        var starttime = borgJson.archive.start;
+        var endtime = borgJson.archive.end;
+        var changedsize = borgJson.cache.stats.unique_csize;
+        var dedupsize = borgJson.archive.stats.deduplicated_size;
+        var totalsize = borgJson.archive.stats.original_size;
+        var type = 'Borg'
+
+        formatedOutputObj.push({
+          'Name': name,
+          'StartTime': starttime,
+          'Endtime': endtime,
+          'Compressed Size': (changedsize / 1000000) + ' MB',
+          'Changed Files Size': (dedupsize / 1000000) + ' MB',
+          'Original Size': (totalsize / 1000000) + ' MB',
+          'Backup Type': type
+        })
+      }
+
     }
   })
   require('console.table');
   console.table(formatedOutputObj);
-
-  //  Table Output:
-  //Name             StartTime                 ElapsedTime          Increment Files Size  Total Size changed  Errors
-  //---------------  ------------------------  -------------------  --------------------  ------------------  ------
-  //backup-new-test  Wed Feb 10 15:38:49 2016  2.75 (2.75 seconds)  0                     0 (0 bytes)         0
 }

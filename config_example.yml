@@ -18,6 +18,10 @@ backupserver:
     backuppartsize: 2048
     tmpdir: /backup/backuptemp
     backupfor: '["server1", "server2", "dockerhost1", "k8s-node"]'
+#for borg backup
+    provider: borg
+    borgcache: /backup/borg
+    borgcompression: zlib
 clientserver:
   backup2:
     HOST: backup2.example.com

@@ -3,7 +3,7 @@
 Nodebackup is a program written in Node.js.
 This program can save the data of a server (folder), docker container volumes and also kubernetes deploy volumes (you need to define the annotations)
 
-We use for backup the [duplicity](http://duplicity.nongnu.org)
+We use for backup the [duplicity](http://duplicity.nongnu.org) or [borg](https://borgbackup.readthedocs.io/en/stable/)
 
 ## Docker container
 
@@ -47,6 +47,10 @@ Run
 ### Duplicity 
 
 You need to install [duplicity](http://duplicity.nongnu.org) on exec
+
+### Borg
+
+You need the Borg verion > 1.1 - show the [releases](https://github.com/borgbackup/borg/releases) on Github
 
 ### SSHFS
 
@@ -110,17 +114,25 @@ Backup Server (Server, which save the backup)
         tmpdir: /tmp
         prerun: '["echo backupserver_prerun1", "echo backupserver_prerun1"]'
         postrun: '["echo backupserver_postrun1", "echo backupserver_postrun1"]'
+        provider: borg
+        borgcache: /backup/borg
+        borgcompression: zlib
+
         
 **backup2** - name of the server. You can define more the on backup server \
 **HOST** - DNS name of server. IP address is possible \
 **USER** - user for authentification \
 **PORT** - ssh port \
-**backuppartsize** (optional) - size of backup archiv parts. If not defined, set to default (100mb) \
+**passphrase** - this option enabled the encryption (borg and duplicity)\
+**backuppartsize** (optional, **duplicity**) - size of backup archiv parts. If not defined, set to default (100mb) \
 **backuppath** - path where the nodebackup will be save backups. Example: /a/target/clientname/path-from-clientconfig-backup \
 **backupfor** - server from config/clientserver \
 **prerun** - a command to run befor start backup. You can run a script, that is saved on target server \
 **postrun** - a command to run after backup. \
 **tmpdir** - folder for temporary files of duplicity (only a backuppart) \
+**provider** - backup tool borg or duplicity
+**borgcache** (optional, **borg**) - path of borg cache folder. \
+**borgcompression** (optional, **borg**) - possible settings - none(default), lz4 (super fast, low compression), zlib (medium speed and compression) or lzma (low speed, high compression). 
 
 ### Client Server (Server)
 
@@ -133,6 +145,7 @@ Client server
         PORT: '22'
         nextfullbackup: 1m
         noffullbackup: 2
+        keepbackup: 60
         backup: /var/spool/asterisk/backup/daily
         prerun: '["echo prerun1","echo prerun2"]'
         postrun: '["echo postrun1", "echo postrun2"]'
@@ -147,14 +160,15 @@ Client server
 **HOST** - DNS name of server. IP address is possible \
 **USER** - user for authentification \
 **PORT** - ssh port \
-**noffullbackup**(optional) - number of fullbackups on server. Equivalent to duplicity "duplicity remove-all-but-n-full" \
-**nextfullbackup**(optional) - age of a fullbackup.Equivalent to duplicity "full-if-older-than" \
+**noffullbackup**(optional, **duplicity**) - number of fullbackups on server. Equivalent to duplicity "duplicity remove-all-but-n-full" \
+**nextfullbackup**(optional, **duplicity**) - age of a fullbackup.Equivalent to duplicity "full-if-older-than" \
 **prerun** - a command to run befor start backup. You can run a script, that is saved on target server \
 **postrun** - a command to run after backup. \
-**confprefixes** - add paramater for rdiff-backup, more information in man rdiff-backup. You don't need to write "--" \
+**confprefixes** (optional, **duplicity**) - add paramater for rdiff-backup, more information in man rdiff-backup. You don't need to write "--" \
 **sftpServer** - if you will use sudo on client, you need to define where is sfpt-server (use command "whereis sftp-server") \
-**compression** - default true \
+**compression** (optional, **duplicity**) - default true \
 **passphrase** - duplicity passphrase, can now for each server or container defined \
+**keepbackup**(optional, **borg**) - delete all backups older then 60 days, equal "borg prune --keep-daily"
 
 
 ### Client Server (Dockerhost)
@@ -226,6 +240,7 @@ Kubernetes configuration in **config.yaml** file
 **PATH**  - Path on server (like \\server\d$) \
 **PASS** - AD User Pass \
 **DOMAIN** - AD Domain \
+**include/exclude** - includes and excludes can used for files (if providers borg) or folders (both provider)
 **strategy: off** - container/s or deploy will be shutdown befor backup (docker-compose -f /path/docker-compose.yml stop) and start again after backup \
 **strategy: on** - backup will be run without shutdown the container or kubernetes deploy \
 **startaftererror** - start container after error (prerun,postrun,backup). Default true \
@@ -255,7 +270,7 @@ other option are equivalent to clientserver configuration
         -r, --restore          starte restore
         -p, --path [path]      Paht server:/path
         -m, --time [time]      backup from [time]
-        -o, --phrase [phrase]  duplicity passphrase
+        -o, --phrase [phrase]  duplicity passphrase (for restore)
 
 ### Example 
     
@@ -282,10 +297,13 @@ With "-t name" can you make a single backup
     sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o DUPLICITY-PASSPHRASE -m 2M
 
 ### Output
+#### Duplicity
 
-    Name               StartTime                 ElapsedTime          Increment Files Size  Total Size changed  Errors
-    -----------------  ------------------------  -------------------  --------------------  ------------------  ------
-    freepbx            Tue Feb 23 14:48:18 2016  1.54 (1.54 seconds)  0                     0 (0 bytes)         0
-    superdocker/backup-new-test-2  Tue Feb 23 14:48:20 2016  2.27 (2.27 seconds)  0                     0 (0 bytes)         0
-    superdocker/backup-new-test    Tue Feb 23 14:48:20 2016  2.05 (2.05 seconds)  0                     0 (0 bytes)         0
+|Name   |StartTime   |ElapsedTime   |Increment Files Size   |Total Size changed |Errors |Backup Type |
+|---|---|---|---|---|---|---|
+|superdocker/backup-new-test   |Thu Nov  2 15:35:10 2017   |6.48 (6.48 seconds)   |153586372 (146 MB)   |151442655 (144 MB)   |0   |duplicity   |
 
+#### Borg
+|Name   |StartTime   |Endtime   |Compressed Size   |Changed Files Size |Original Size |Backup Type |
+|---|---|---|---|---|---|---|
+|superdocker/backup-new-test   |2017-11-02T15:30:03.000000  |2017-11-02T15:30:11.000000   |75.419186 MB   |75.419186 MB   |153.592301 MB   |Borg   |
