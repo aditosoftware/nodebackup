@@ -1,0 +1,53 @@
+#second example configuration for testing of nodebackup
+httpd:
+  image: httpd
+  hostname: backup-new-test
+  links:
+    - redis:redisio
+  volumes:
+    - /a/data/backup-new-test/httpdocs:/a/http
+    - /a/data/backup-new-test/httpconf:/a/conf
+  restart: unless-stopped
+  labels:
+    prerun: '["casst"]'
+    #prerun: '["echo prerun1", "echo prerun2"]'
+    postrun: '["echo postrun1","echo postrun2"]'
+    include: '["inc1", "inc2", "inc3"]'
+    exclude: '["httpconf", "rbd"]'
+    nextfullbackup: "1s"
+    noffullbackup: "2"
+    backup: "/a/data/backup-new-test"
+    strategy: "off"
+    confprefixes: '["allow-source-mismatch"]'
+    name: "backup-new-test"
+    processes: '["httpd"]'
+    #failovercustom: "echo 'failover ####################'"
+    passphrase: "+++++containerPASS#######"
+
+redis:
+  image: sameersbn/redis:latest
+  restart: unless-stopped
+
+httpd2:
+  image: httpd
+  hostname: backup-new-test2
+  links:
+    - redis:redisio
+  volumes:
+    - /a/data/backup-new-test/httpdocs:/a/http
+    - /a/data/backup-new-test/httpconf:/a/conf
+  restart: unless-stopped
+  labels:
+    prerun: '["echo prerun1", "echo prerun2"]'
+    #prerun: '["cas2"]'
+    postrun: '["echo postrun1","echo postrun2"]'
+    include: '["inc1", "inc2", "inc3"]'
+    exclude: '["httpconf", "rbd"]'
+    nextfullbackup: "1s"
+    noffullbackup: "2"
+    backup: "/a/data/backup-new-test"
+    strategy: "off"
+    confprefixes: '["allow-source-mismatch"]'
+    name: "backup-new-test2"
+    processes: '["httpd"]'
+    #failovercustom: "echo 'failover ###########

@@ -3,6 +3,9 @@
 Nodebackup is a program written in Node.js.
 This program can save the data of a server (folder), docker container volumes and also kubernetes deploy volumes (you need to define the annotations)
 
+##### New 
+Also we've added support of monitoring ([icinga2](https://icinga2.com)), the nodebackup can send his state of backups to the monitoring throught icinga2 api.
+
 We use for backup the [duplicity](http://duplicity.nongnu.org) or [borg](https://borgbackup.readthedocs.io/en/stable/)
 
 ## Docker container
@@ -44,11 +47,14 @@ Run
 
     npm i
 
-### Duplicity 
+### Backup tools
+You need install a backup tool, that you will use, we recommendate borg.
+
+#### Duplicity 
 
 You need to install [duplicity](http://duplicity.nongnu.org) on exec
 
-### Borg
+#### Borg
 
 You need the Borg verion > 1.1 - show the [releases](https://github.com/borgbackup/borg/releases) on Github
 
@@ -81,8 +87,8 @@ Nodebackup will be copy this key to exec server, when backup job is completed ke
 
 ## Configuration file
 
-You need to save the **config.yml** in the same folder as nodebackup. Config.yml is a file in YAML format
-You can show a example - config_example.yaml
+You need to save the **config.yml** in the same folder as nodebackup. Config.yml is a file in YAML format, where saved the information for backups, like backup address, port and user. \
+Show example: **config_example.yaml**
 
 ### Starter configuration
 
@@ -96,7 +102,8 @@ Starter
 
 **sshkey** - path to ssh key \
 **log** - path to folder of log files \
-**pids** - the running backupjob create a pid file, if a pidfile exist, then an backupjob cannot start
+**pids** - the running backupjob create a pid file, if a pidfile exist, then an backupjob cannot start \
+**disableOutput** - disable table output, when backup is ready
 
 ### Backupserver configuration
 
@@ -257,20 +264,17 @@ other option are equivalent to clientserver configuration
 
     #:/nodejs/nodebackup$ node BackupExecV2.js -h
 
-    Options:
+  Options:
 
-        -h, --help             output usage information
-        -V, --version          output the version number
-        -b, --backup           start backup
-        -e, --exec [exec]      server, which start backup job
-        -t, --target [target]  single server for backup
-        -s, --server [server]  backup server
-        -d, --debug            debug to console
-        -f, --debugfile        debug to file
-        -r, --restore          starte restore
-        -p, --path [path]      Paht server:/path
-        -m, --time [time]      backup from [time]
-        -o, --phrase [phrase]  duplicity passphrase (for restore)
+    -h, --help             output usage information
+    -V, --version          output the version number
+    -b, --backup           start backup
+    -e, --exec [exec]      server, which start backup job
+    -t, --target [target]  single server for backup
+    -s, --server [server]  backup server
+    -d, --debug            debug to console
+    -f, --debugfile        debug to file
+
 
 ### Example 
     
@@ -287,14 +291,35 @@ With "-t name" can you make a single backup
 
     node BackupExecV2 -b -e backup2 -s backup2 -t backup-new-test
 
-### Restore
+### Monitoring settings
+The backup job can send, the state of backup on icinga2. You don't need create the host and services for this on icinga2 server, this will be create automatically from nodebackup. \
+![schema2](schema/icinga_screenshot.png)
+The backup server (server where the backups will'be saved) are registred as a host and for each backupjob, that was saved on backup server, was created a service with state of backup. \
+The screenshot show us, that the backup server "backup2" have running two backupjobs - one is okay, the other one is with error (prerun command was not found). \
 
-#### Restore a container "backup-new-test" from backup2 server on freepbx server. This option working only on normal server
-    
-    sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o DUPLICITY-PASSPHRASE
-    
-#### Restore a backup from date: s,m,h,D,W,M,Y
-    sudo node BackupExecV3.js -r -e backup2 -s backup2 -p freepbx:/tmp -o DUPLICITY-PASSPHRASE -m 2M
+#### Configuration
+We need this for working with monitoring.
+1. Create a template for icinga2, that will be used from nodebackup. Show the file "backup-host.conf"
+2. Added api user in icinga2. You can use our [icinga2 docker image](https://hub.docker.com/r/adito/icinga2/)
+3. Added the settings for icinga2 in config.yaml configuration. Show the example configuration "config_example.yaml"
+```
+starter:
+  sshkey: id_rsa
+  log:
+    path: log
+  pids: pids
+  # disableOutput: 'true'
+  monitoring: 'true'
+  hosttemplate: 'backup-host'
+  srvtemplate: 'backup-service'
+  monserver: '192.168.42.41'
+  monport: '5665'
+  monapiuser: 'root'
+  monapipass: 'PASS'
+  hostgroup: 'adito'
+  servicegroup: 'adito'
+```
+
 
 ### Output
 #### Duplicity

@@ -1,8 +1,18 @@
 starter:
-    sshkey: id_rsa
-    log:
-      path: log
-    pidpath: pids
+  sshkey: id_rsa
+  log:
+    path: log
+  pidpath: pids
+  # disableOutput: 'true'
+  monitoring: 'true'
+  hosttemplate: 'backup-host'
+  srvtemplate: 'backup-service'
+  monserver: '192.168.42.41'
+  monport: '5665'
+  monapiuser: 'root'
+  monapipass: 'PASS'
+  hostgroup: 'adito'
+  servicegroup: 'adito'
 backupserver:
   backup2:
     passphrase: PASSPHRASE-FOR-DUPLICITY
@@ -39,6 +49,7 @@ clientserver:
     backup: /var/spool/asterisk/backup/taeglich
     prerun: '["mv /var/spool/asterisk/backup/taeglich/*.tgz /var/spool/asterisk/backup/taeglich/backup.tgz"]'
     postrun: '["rm -Rf /var/spool/asterisk/backup/taeglich/backup.tgz"]'
+    ##duplicity 
     confprefixes: '["asynchronous-upload"]'
   server2:
     HOST: "windows.example.com"
@@ -52,6 +63,7 @@ clientserver:
     backup: /cygdrive/d
     include: '["usershare", "publicshare"]'
     exclude: '["publicshare/Softwarepool", "**"]'
+    #duplicity
     confprefixes: '["asynchronous-upload", "allow-source-mismatch"]'
   dockerhost1:
     HOST: dockerHostN010912m.example.local

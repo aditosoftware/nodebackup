@@ -1,3 +1,4 @@
+# example configuration of a docker-compose.yaml file
 httpd:
   image: httpd
   hostname: backup-new-test

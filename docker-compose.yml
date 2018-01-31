@@ -1,3 +1,4 @@
+#docker-compose.yaml file with configuration of nodebackup container
 backupcontroller:
   image: adito/nodebackup
   hostname: backupcontroller

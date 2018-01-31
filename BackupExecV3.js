@@ -4,10 +4,11 @@ var fs = require('fs');
 var yaml2json = require('yamljs');
 var path = require('path');
 var program = require('commander');
-var helpf = require('./lib/helpFunc');
-var backup = require('./lib/Backup');
-var RestoreFunc = require('./lib/RestoreFunc');
-var logger = require('./lib/Logger');
+var helpf = require('./lib/misc/helpFunc');
+var backup = require('./lib/backup/Backup');
+var RestoreFunc = require('./lib/backup/RestoreFunc');
+var logger = require('./lib/logger/Logger');
+var monitor = require('./lib/monitoring');
 
 program
   .version('3.0.10')
@@ -17,10 +18,10 @@ program
   .option('-s, --server [server]', 'backup server')
   .option('-d, --debug', 'debug to console')
   .option('-f, --debugfile', 'debug to file');
-  // .option('-r, --restore', 'starte restore')
-  // .option('-p, --path [path]', 'Paht server:/path')
-  // .option('-m, --time [time]', 'backup from [time]')
-  // .option('-o, --phrase [phrase]', 'duplicity passphrase');
+// .option('-r, --restore', 'starte restore')
+// .option('-p, --path [path]', 'Paht server:/path')
+// .option('-m, --time [time]', 'backup from [time]')
+// .option('-o, --phrase [phrase]', 'duplicity passphrase');
 
 program.on('--help', function () {
   console.log('  Info:');
@@ -196,6 +197,24 @@ if (program.backup) {
 var getFormatedOutput = function (output) {
   var formatedOutputObj = [];
 
+  if (serverconfig.starter.monitoring) {
+
+    var monSer = new monitor(serverconfig, program.target);
+
+    monSer.checkHosttemplate('backup-host', function (err, result) {
+      if (err) {
+        logger.error("Cannot check host template. Err: " + JSON.stringify(err));
+      } else {
+        monSer.sendBackupStat(program.server, output, function (err, out) {
+          if (err) {
+            logger.error('Cannot send the status of backup. Err: ' + JSON.stringify(err));
+          }
+        })
+      }
+    })
+  }
+
+
   output.map((runOutput) => {
     var errorOut = runOutput.output.error; //output is a error output of command or not
     var message = runOutput.output.message; //command output message
@@ -255,7 +274,7 @@ var getFormatedOutput = function (output) {
         }
       }
 
-      if (type == 'borg'){
+      if (type == 'borg') {
         var borgJson = JSON.parse(message);
         var starttime = borgJson.archive.start;
         var endtime = borgJson.archive.end;
@@ -277,6 +296,8 @@ var getFormatedOutput = function (output) {
 
     }
   })
-  require('console.table');
-  console.table(formatedOutputObj);
+  if (!serverconfig.starter.disableOutput) {
+    require('console.table');
+    console.table(formatedOutputObj);
+  }
 }
