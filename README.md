@@ -293,7 +293,7 @@ With "-t name" can you make a single backup
 
 ### Monitoring settings
 The backup job can send, the state of backup on icinga2. You don't need create the host and services for this on icinga2 server, this will be create automatically from nodebackup. \
-![schema2](schema/icinga_screenshot.png)
+![icinga2](schema/icinga_screenshot.png)
 The backup server (server where the backups will'be saved) are registred as a host and for each backupjob, that was saved on backup server, was created a service with state of backup. \
 The screenshot show us, that the backup server "backup2" have running two backupjobs - one is okay, the other one is with error (prerun command was not found). \
 
