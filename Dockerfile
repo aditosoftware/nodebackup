@@ -11,7 +11,7 @@ RUN apk update && apk upgrade && \
     && echo '2 0 * * * echo "Test Test"' >> /crontab.tmp \
     && crontab /crontab.tmp \
     && rm -rf /crontab.tmp \
-    && cd /nodebackup && npm install \
+    && cd /nodebackup && npm install && npm update\
     && chmod +x /run.sh
 
 CMD ["/run.sh"]
