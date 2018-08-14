@@ -1,4 +1,4 @@
-FROM node:8.6-alpine
+FROM node:10-alpine
 
 ADD run.sh /
 ADD BackupExecV3.js /nodebackup/
