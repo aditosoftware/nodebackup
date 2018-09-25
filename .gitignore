@@ -6,3 +6,4 @@ config.yml
 pids/
 log
 log/
+package-lock.json

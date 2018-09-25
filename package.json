@@ -7,10 +7,10 @@
     "commander": "~2.9.0",
     "console.table": "^0.9.1",
     "icinga2-api": "^1.1.1",
-    "lodash": "^4.17.4",
-    "ssh2": "~0.4.13",
+    "lodash": "^4.17.11",
+    "ssh2": "~0.4.15",
     "winston": "~2.1.1",
-    "yamljs": "~0.2.5"
+    "yamljs": "~0.2.10"
   },
   "devDependencies": {},
   "scripts": {

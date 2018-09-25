@@ -232,6 +232,7 @@ Kubernetes configuration in **config.yaml** file
       PATH: "d$"
       PASS: "AD User Pass"
       DOMAIN: "example.local"
+      SMBVERS: "2.0"
 
 #### kubernetes deploy (show example "echoserver-dep.yaml)
 
@@ -247,6 +248,7 @@ Kubernetes configuration in **config.yaml** file
 **PATH**  - Path on server (like \\server\d$) \
 **PASS** - AD User Pass \
 **DOMAIN** - AD Domain \
+**SMBVERS** - Samba version (cifs param vers=2.0/3.0/etc.)
 **include/exclude** - includes and excludes can used for files (if providers borg) or folders (both provider)
 **strategy: off** - container/s or deploy will be shutdown befor backup (docker-compose -f /path/docker-compose.yml stop) and start again after backup \
 **strategy: on** - backup will be run without shutdown the container or kubernetes deploy \
