@@ -167,9 +167,6 @@ if (program.backup) {
 
   var backupServerConfig = serverconfig.backupserver[program.server]; //get config of backup server from config.yaml
   var execServerConfig = serverconfig.clientserver[program.exec]; //get config of exec server from config.yaml
-  if (program.target) {
-    var targetServer = serverconfig.clientserver[program.target];
-  }
 
   logger.debug("Backup server is: " + program.server);
   logger.debug("Exec server is: " + program.exec);
