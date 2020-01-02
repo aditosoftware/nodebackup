@@ -302,6 +302,7 @@ var getFormatedOutput = function (output) {
           'Compressed Size': (changedsize / 1000000) + ' MB',
           'Changed Files Size': (dedupsize / 1000000) + ' MB',
           'Original Size': (totalsize / 1000000) + ' MB',
+          'Errors': error_string,
           'Backup Type': type
         })
       }
