@@ -170,7 +170,7 @@ if (program.backup) {
 
   logger.debug("Backup server is: " + program.server);
   logger.debug("Exec server is: " + program.exec);
-  logger.debug("Parse config.yml");
+  logger.info("Parse config.yml");
 
   var testConfig = helpf.checkConfig([backupServerConfig, execServerConfig]) //check configuration of backup and exec servers
     .then(configOK => {
@@ -184,6 +184,8 @@ if (program.backup) {
           if (err) {
             logger.error(err);
           } else {
+            logger.info("...done");
+            logger.info("Generating Output");
             getFormatedOutput(backupResult); //format output
           }
         });
