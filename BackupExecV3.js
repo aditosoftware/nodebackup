@@ -272,13 +272,28 @@ var getFormatedOutput = function (output) {
       }
 
       if (type == 'borg') {
-        var borgJson = JSON.parse(message);
-        var starttime = borgJson.archive.start;
-        var endtime = borgJson.archive.end;
-        var changedsize = borgJson.cache.stats.unique_csize;
-        var dedupsize = borgJson.archive.stats.deduplicated_size;
-        var totalsize = borgJson.archive.stats.original_size;
+
         var type = 'Borg'
+        var error_string = "";
+        try {
+            var borgJson = JSON.parse(message);
+            var starttime = borgJson.archive.start;
+            var endtime = borgJson.archive.end;
+            var changedsize = borgJson.cache.stats.unique_csize;
+            var dedupsize = borgJson.archive.stats.deduplicated_size;
+            var totalsize = borgJson.archive.stats.original_size;
+        }
+        catch (err) {
+            logger.error(name + " Error occoured during backup ");
+            logger.error(err);
+
+            var starttime = "error see logs";
+            var endtime = message;
+            var changedsize = 1;
+            var dedupsize = 1;
+            var totalsize = 1;
+            error_string = err;
+        }
 
         formatedOutputObj.push({
           'Name': name,
