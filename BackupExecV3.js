@@ -289,7 +289,7 @@ var getFormatedOutput = function (output) {
             logger.error(name + " Error occoured during backup ");
             logger.error(err);
 
-            var starttime = "error see logs";
+            var starttime = "error, see logs for more details";
             var endtime = message;
             var changedsize = 0;
             var dedupsize = 0;
@@ -297,6 +297,7 @@ var getFormatedOutput = function (output) {
             error_string = err;
         }
 
+        logger.info("Summary: " + name + " | " + starttime + " | " + endtime + " | " + changedsize + " kB");
         formatedOutputObj.push({
           'Name': name,
           'StartTime': starttime,
