@@ -255,7 +255,7 @@ var getFormatedOutput = function (output) {
           var errors = stat[ln + 15].substring(7, 100); //Errors |0|
           var type = 'duplicity';
 
-          logger.info(name + " | " + starttime + " | " + elapsedTime + " | " + incFiles + "  | " + totalSize + " | " + errors); //write output to log file
+          logger.info("Summary: " + name + " | " + starttime + " | " + elapsedTime + " | " + incFiles + "  | " + totalSize + " | " + errors); //write output to log file
           //      like: 
           //      2016-02-10T15:15:49.027Z - info: Name | StartTime | ElapsedTime | Incerment Files Size  | Total Size changed | Errors
           //      2016-02-10T15:15:49.031Z - info: freepbx |  |  |   |  | mv: cannot stat `/var/spool/asterisk/backup/taeglich/*.tgz': No such file or directory
@@ -291,9 +291,9 @@ var getFormatedOutput = function (output) {
 
             var starttime = "error see logs";
             var endtime = message;
-            var changedsize = 1;
-            var dedupsize = 1;
-            var totalsize = 1;
+            var changedsize = 0;
+            var dedupsize = 0;
+            var totalsize = 0;
             error_string = err;
         }
 
