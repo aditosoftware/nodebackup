@@ -11,13 +11,14 @@ var logger = require('./lib/logger/Logger');
 var monitor = require('./lib/monitoring');
 
 program
-  .version('3.0.10')
+  .version('3.0.11')
   .option('-b, --backup', 'start backup')
   .option('-e, --exec [exec]', 'server, which start backup job')
   .option('-t, --target [target]', 'single server for backup')
   .option('-s, --server [server]', 'backup server')
   .option('-d, --debug', 'debug to console')
-  .option('-f, --debugfile', 'debug to file');
+  .option('-f, --debugfile', 'debug to file')
+  .option('-z, --summaryfile', 'write summary to file');
 // .option('-r, --restore', 'starte restore')
 // .option('-p, --path [path]', 'Paht server:/path')
 // .option('-m, --time [time]', 'backup from [time]')
@@ -316,4 +317,27 @@ var getFormatedOutput = function (output) {
     require('console.table');
     console.table(formatedOutputObj);
   }
+
+
+if (program.summaryfile) {
+
+    var summary = "";
+    for (var i = 0; i < formatedOutputObj.length; i++) {
+        summary += "Name: " + formatedOutputObj[i].Name +"\r\n";
+        summary += "\tStartTime:          " + formatedOutputObj[i].StartTime +"\r\n";
+        summary += "\tEndtime:            " + formatedOutputObj[i].Endtime +"\r\n";
+        summary += "\tCompressed Size:    " + formatedOutputObj[i]['Compressed Size'] +"\r\n";
+        summary += "\tChanged Files Size: " + formatedOutputObj[i]['Changed Files Size'] +"\r\n";
+        summary += "\tOriginal Size:      " + formatedOutputObj[i]['Original Size'] +"\r\n";
+        summary += "\tErrors:             " + formatedOutputObj[i].Errors +"\r\n";
+        summary += "\tBackup Type:        " + formatedOutputObj[i]['Backup Type'] +"\r\n\r\n";
+    }
+
+    fs.writeFile(logdir + "/" + timeAct + '_' + program.server + '_summary_.log',summary ,"utf8", function(err) {
+        if(err) {
+            logger.error(err);
+        }
+    });
+}
+
 }
