@@ -11,7 +11,7 @@ echo "mailhub=$SSMTP_MAIL_SERVER" >> /etc/ssmtp/ssmtp.conf
 echo "hostname=$SSMTP_HOST" >> /etc/ssmtp/ssmtp.conf
 
 # Use STARTTLS
-echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf
+echo "UseSTARTTLS=$SSMTP_STARTTLS" >> /etc/ssmtp/ssmtp.conf
 
 #Create Cron job
 crontab /crontab.tmp && /usr/sbin/crond -L /var/log/crond.log -f -d 0
